@@ -27,24 +27,9 @@
   ],
   "requests": [
     {
-      "id": "cdd2",
-      "name": "Ilhom",
-      "phone": "+992 00 577 54 06"
-    },
-    {
-      "id": "9ea4",
-      "name": "Ilhom",
-      "phone": "+992 00 577 54 06"
-    },
-    {
-      "id": "e3ac",
-      "name": "Ilhom",
-      "phone": "+992 00 577 54 06"
-    },
-    {
-      "id": "588f",
+      "id": "fccc",
       "name": "Alew",
-      "phone": "+992 000339066"
+      "phone": "777777777777"
     }
   ]
 }

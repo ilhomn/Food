@@ -176,6 +176,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // Forms
+  // Forms
   const forms = document.querySelectorAll("form");
   const message = {
     loading: "Загрузка...",
@@ -210,31 +211,21 @@ window.addEventListener("DOMContentLoaded", () => {
       statusMessage.textContent = message.loading;
       form.append(statusMessage);
 
-      const request = new XMLHttpRequest();
-      request.open("POST", "server.php");
-      request.setRequestHeader("Content-type", "application/json");
-
       const formData = new FormData(form);
-
       const json = JSON.stringify(Object.fromEntries(formData.entries()));
-      const obj = { a: 23, b: 50 };
-      console.log(Object.entries(obj));
 
-      postData("http://localhost:3000/requests", json);
-      const jsonn = JSON.stringify(obj);
-
-      request.send(jsonn);
-
-      request.addEventListener("load", () => {
-        if (request.status === 200) {
-          console.log(request.response);
+      postData("http://localhost:3000/requests", json)
+        .then((data) => {
+          console.log(data);
           showThanksModal(message.success);
-          form.reset();
           statusMessage.remove();
-        } else {
+        })
+        .catch(() => {
           showThanksModal(message.failure);
-        }
-      });
+        })
+        .finally(() => {
+          form.reset();
+        });
     });
   }
 
@@ -243,11 +234,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (prevModalDialog) {
       prevModalDialog.innerHTML = `
-        <div class="modal__content">
-          <div class="modal__close" data-close>x</div>
-          <div class="modal__title">${msg}</div>
-        </div>
-      `;
+      <div class="modal__content">
+        <div class="modal__close" data-close>x</div>
+        <div class="modal__title">${msg}</div>
+      </div>
+    `;
 
       openModal();
 
@@ -258,8 +249,4 @@ window.addEventListener("DOMContentLoaded", () => {
       setTimeout(closeModal, 4000);
     }
   }
-
-  fetch("http://localhost:3000/menu")
-    .then((data) => data.json())
-    .then((res) => console.log(res));
 });
