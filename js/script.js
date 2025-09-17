@@ -152,32 +152,28 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  new MenuCard(
-    "img/tabs/vegy.jpg",
-    "vegy",
-    `Меню "Фитнес"`,
-    `Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей.`,
-    9,
-    ".menu .container"
-  ).render();
+  const getResource = async (url) => {
+    const res = await fetch(url);
 
-  new MenuCard(
-    "img/tabs/elite.jpg",
-    "elite",
-    `Меню "Премиум"`,
-    `Меню “Премиум” включает качественные продукты: красная рыба, морепродукты, фрукты.`,
-    14,
-    ".menu .container"
-  ).render();
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
 
-  new MenuCard(
-    "img/tabs/post.jpg",
-    "post",
-    `Меню "Постное"`,
-    `Меню “Постное” - полностью растительная еда: тофу, вегетарианские стейки.`,
-    21,
-    ".menu .container"
-  ).render();
+    return await res.json();
+  };
+
+  getResource("http://localhost:3000/menu").then((data) => {
+    data.forEach(({ img, altimg, title, descr, price }) => {
+      new MenuCard(
+        img,
+        altimg,
+        title,
+        descr,
+        price,
+        ".menu .container"
+      ).render();
+    });
+  });
 
   // Forms
   const forms = document.querySelectorAll("form");
@@ -187,9 +183,22 @@ window.addEventListener("DOMContentLoaded", () => {
     failure: "Что-то пошло не так...",
   };
 
-  forms.forEach(postData);
+  forms.forEach((item) => {
+    bindpostData(item);
+  });
 
-  function postData(form) {
+  const postData = async (url, data) => {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: data,
+    });
+    return await res.json();
+  };
+
+  function bindpostData(form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -206,11 +215,15 @@ window.addEventListener("DOMContentLoaded", () => {
       request.setRequestHeader("Content-type", "application/json");
 
       const formData = new FormData(form);
-      const obj = {};
-      formData.forEach((value, key) => (obj[key] = value));
-      const json = JSON.stringify(obj);
 
-      request.send(json);
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
+      const obj = { a: 23, b: 50 };
+      console.log(Object.entries(obj));
+
+      postData("http://localhost:3000/requests", json);
+      const jsonn = JSON.stringify(obj);
+
+      request.send(jsonn);
 
       request.addEventListener("load", () => {
         if (request.status === 200) {
