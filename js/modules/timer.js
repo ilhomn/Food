@@ -1,6 +1,4 @@
-function timer() {
-  const deadLine = "2025-12-27";
-
+function timer(id, deadLine) {
   function getTimeRemaining(endtime) {
     const t = Date.parse(endtime) - Date.parse(new Date()),
       days = Math.floor(t / (1000 * 60 * 60 * 24)),
@@ -36,7 +34,7 @@ function timer() {
     const timeInterval = setInterval(updateClock, 1000);
   }
 
-  setClock(".timer", deadLine);
+  setClock(id, deadLine);
 }
 
-module.exports = timer;
+export default timer;

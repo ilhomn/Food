@@ -1,5 +1,8 @@
-function forms() {
-  const forms = document.querySelectorAll("form");
+import { closeModal, openModal } from "./modal";
+import { postData } from "./services/services";
+
+function forms(formSelector, modalTimerId) {
+  const forms = document.querySelectorAll(formSelector);
   const message = {
     loading: "Загрузка...",
     success: "Спасибо! Скоро мы с вами свяжемся",
@@ -9,17 +12,6 @@ function forms() {
   forms.forEach((item) => {
     bindpostData(item);
   });
-
-  const postData = async (url, data) => {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: data,
-    });
-    return await res.json();
-  };
 
   function bindpostData(form) {
     form.addEventListener("submit", (e) => {
@@ -62,7 +54,7 @@ function forms() {
       </div>
     `;
 
-      openModal();
+      openModal(".modal", modalTimerId);
 
       prevModalDialog
         .querySelector("[data-close]")
@@ -73,4 +65,4 @@ function forms() {
   }
 }
 
-module.exports = forms;
+export default forms;
